@@ -22,6 +22,7 @@ The goals / steps of this project are the following:
 [image5]: ./examples/placeholder_small.png "Recovery Image"
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
+[image8]: ./examples/loss_vari_5epochs.png "RMSE sequences"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -55,20 +56,6 @@ My model consists of a convolution neural network with 5x5 filter sizes and dept
 
 The model includes RELU layers to introduce nonlinearity (code line 67, 68), and the data is normalized in the model using a Keras lambda layer (code line 63).
 
-A over view of each layers is following:
-* Cropping the picture for focusing on the road
-* Normalization
-* 2D convolutional layer with depth: 24, filter size: 5 * 5
-* 2D convolutional layer with depth: 36, filter size: 5 * 5
-* 2D convolutional layer with depth: 48, filter size: 5 * 5
-* 2D convolutional layer with depth: 64, filter size: 3 * 3
-* 2D convolutional layer with depth: 64, filter size: 3 * 3
-* Flatten
-* Full connected layer with the output size 100
-* Full connected layer with the output size 50
-* Full connected layer with the output size 10
-* Full connected layer with the output size 1
-
 #### 2. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 75).
@@ -83,29 +70,48 @@ For details about how I created the training data, see the next section.
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to predict the steering angles with the input road images.
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+I planned to use several convolutional layers and full connected lay to achive this goal.
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I used mean squared error to measure the performance of the model, applied to the validation dataset.
 
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-#### 2. Final Model Architecture
+#### 2. Attempts to reduce overfitting in the model
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+About the overfitting, I monitorred the RMSE error values along more epochs, unsed the "tuning the epochs number" to avoid overfitting.
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+A visualisation is shown below.
+![alt text][image8]
 
-![alt text][image1]
+In the diagram, I saw after 2nd epochs the accuracy on the train data reduces, while the accuracy on the validation data increases. This is clearly a overfitting.
 
-#### 3. Creation of the Training Set & Training Process
+So the training epochs is set to 2 to avoid overfitting (model.py lines 80). 
+
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 24). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track. So the dropout layer is not neccessary in this situation.
+
+#### 3. Final Model Architecture
+
+The final model architecture (model.py lines 62-73) consisted of a convolution neural network with the following layers as written below.
+
+A over view of each layers is following:
+* Cropping the picture for focusing on the road
+* Normalization
+* 2D convolutional layer with depth: 24, filter size: 5 * 5
+* 2D convolutional layer with depth: 36, filter size: 5 * 5
+* 2D convolutional layer with depth: 48, filter size: 5 * 5
+* 2D convolutional layer with depth: 64, filter size: 3 * 3
+* 2D convolutional layer with depth: 64, filter size: 3 * 3
+* Flatten
+* Full connected layer with the output size 100
+* Full connected layer with the output size 50
+* Full connected layer with the output size 10
+* Full connected layer with the output size 1
+
+#### 4. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
@@ -117,17 +123,9 @@ I then recorded the vehicle recovering from the left side and right sides of the
 ![alt text][image4]
 ![alt text][image5]
 
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+Then I repeated this process towards another driving direction on the same track two in order to get more data points and redce the training data bias to left turn.
 
 After the collection process, I had X number of data points. I then preprocessed this data by ...
-
 
 I finally randomly shuffled the data set and put Y% of the data into a validation set. 
 
