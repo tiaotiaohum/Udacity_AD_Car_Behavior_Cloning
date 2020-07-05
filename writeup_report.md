@@ -16,10 +16,10 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
+[image2]: ./examples/center_lane_driving.png "Grayscaling"
+[image3]: ./examples/left_recovery.png "Recovery Image"
+[image4]: ./examples/right_recovery.png "Recovery Image"
+[image5]: ./examples/other_direction.png "Recovery Image"
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 [image8]: ./examples/loss_vari_5epochs.png "RMSE sequences"
@@ -117,16 +117,18 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to rescue itself when it is not is the center of lane. These images show what a recovery looks like starting from the lane edges with huge steering angle towards the lane center:
 
 ![alt text][image3]
 ![alt text][image4]
+
+
+Then I repeated this process towards another driving direction on the same track two in order to get more data points and redce the training data bias to left turn(see in the following picture).
+
 ![alt text][image5]
 
-Then I repeated this process towards another driving direction on the same track two in order to get more data points and redce the training data bias to left turn.
+After the collection process, I had 13026 of data points. I then preprocessed this data line by line.
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 2 as evidenced by the picture in the above chapter about overfitting. I used an adam optimizer so that manually training the learning rate wasn't necessary.
